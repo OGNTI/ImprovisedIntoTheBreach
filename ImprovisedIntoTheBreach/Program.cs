@@ -8,8 +8,9 @@ using ImprovisedIntoTheBreach;
 int screenWidth = 1400;
 int screenHeight = 950;
 int gridSize = 8;
+int cellSize = 100;
 
-Grid grid = new(new Vector2(screenWidth/2, screenHeight/2), gridSize, gridSize, 100);
+Grid grid = new(new Vector2(screenWidth / 2, screenHeight / 2), gridSize, gridSize, cellSize);
 
 
 
@@ -28,7 +29,7 @@ while (!Raylib.WindowShouldClose())
 
     grid.Draw();
 
-    Raylib.DrawRectangle((int)grid.actualgrid[1,2].X, (int)grid.actualgrid[1,2].Y, 30, 30, Color.Red);
+    Raylib.DrawRectangle((int)grid.Cells[0, 2].Position.X, (int)grid.Cells[1, 2].Position.Y, cellSize, cellSize, Color.Red);
 
     Raylib.EndDrawing();
 }

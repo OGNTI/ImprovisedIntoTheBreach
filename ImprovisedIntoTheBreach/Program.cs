@@ -29,7 +29,5 @@ while (!Raylib.WindowShouldClose())
 
     grid.Draw();
 
-    Raylib.DrawRectangle((int)grid.Cells[0, 2].Position.X, (int)grid.Cells[1, 2].Position.Y, cellSize, cellSize, Color.Red);
-
     Raylib.EndDrawing();
 }

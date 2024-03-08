@@ -7,17 +7,16 @@ using ImprovisedIntoTheBreach;
 
 int screenWidth = 1400;
 int screenHeight = 950;
-int gridSize = 8;
-int cellSize = 100;
+int colsNRows = 8;
+int slotSize = 100;
 
-Grid grid = new(new Vector2(screenWidth / 2, screenHeight / 2), gridSize, gridSize, cellSize);
+
+Grid grid = new(new Vector2(screenWidth / 2, screenHeight / 2), colsNRows, colsNRows, slotSize);
 
 
 
 Raylib.InitWindow(screenWidth, screenHeight, "hmm");
 Raylib.SetTargetFPS(60);
-
-
 
 
 

@@ -13,7 +13,6 @@ public class Grid: IDrawable
     private int slotPadding = 4;
 
     Color backgroundColor = Color.Beige;
-    Color slotColor = Color.LightGray;
 
 
     public Grid(Vector2 position, int cols, int rows, int slotSize)

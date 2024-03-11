@@ -8,14 +8,13 @@ public class Slot: IDrawable
     private int padding = 5;
 
     Color edgeColor = Color.Black;
-    Color contentColor = Color.Beige;
+    Color contentColor = Color.LightGray;
 
     public Slot(Vector2 position, int slotSize)
     {
         slotRect = new Rectangle(position, slotSize, slotSize);
         int size = slotSize - padding * 2;
         contentRect = new Rectangle(position + new Vector2(padding, padding), size, size);
-
     }
 
     public void Draw()

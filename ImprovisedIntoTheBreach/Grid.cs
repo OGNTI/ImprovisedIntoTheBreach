@@ -1,18 +1,18 @@
 ﻿namespace ImprovisedIntoTheBreach;
 
-public class Grid: IDrawable
+public class Grid : IDrawable
 {
     private Vector2 _position;
     private int _cols;
     private int _rows;
     private int _slotSize;
-    public Slot[,] SlotGrid;
+    public Slot[,] Slots;
     Rectangle gridRect;
 
     private int backgroundPadding = 7;
-    private int slotPadding = 4;
+    private int slotPadding = 6;
 
-    Color backgroundColor = Color.Beige;
+    Color backgroundColor = Color.DarkGray;
 
 
     public Grid(Vector2 position, int cols, int rows, int slotSize)
@@ -32,23 +32,22 @@ public class Grid: IDrawable
             )
         );
 
-        SlotGrid = new Slot[_cols, _rows];
+        Slots = new Slot[_cols, _rows];
 
         for (int i = 0; i < _cols; i++)
         {
             for (int j = 0; j < _rows; j++)
             {
-                SlotGrid[i, j] = new Slot(new Vector2
+                Slots[i, j] = new Slot(new Vector2
                     (
-                        _position.X + (i * _slotSize) + (i * slotPadding), 
+                        _position.X + (i * _slotSize) + (i * slotPadding),
                         _position.Y + (j * _slotSize) + (j * slotPadding)
-                    ), 
+                    ),
                     _slotSize
                 );
             }
         }
     }
-
 
     public void Draw()
     {
@@ -57,7 +56,7 @@ public class Grid: IDrawable
         {
             for (int j = 0; j < _rows; j++)
             {
-                SlotGrid[i, j].Draw();
+                Slots[i, j].Draw();
             }
         }
     }

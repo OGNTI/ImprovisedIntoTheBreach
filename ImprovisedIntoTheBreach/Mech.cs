@@ -4,11 +4,15 @@ namespace ImprovisedIntoTheBreach;
 public class Mech : GameObject, IClickable
 {
     protected Slot _slot;
-    Rectangle _rect;
+    public Rectangle _rect;
+
+    Color selectedColor = Color.Green;
 
     Texture2D icon = Raylib.LoadTexture(@"IMG/CombatMech.png");
 
-    float moveRange = 4;
+    public int moveRange = 4;
+
+    public bool isSelected = false;
 
     public Mech(Slot slot)
     {
@@ -23,9 +27,12 @@ public class Mech : GameObject, IClickable
         return Raylib.CheckCollisionPointRec(mousePos, _rect);
     }
 
-    public void Click()
+    public void Click(Grid grid)
     {
-        Console.WriteLine("gae");
+        isSelected = !isSelected;
+        _slot.contentColor = selectedColor;
+        if (isSelected) grid.ShowMovementRange(moveRange, _slot, selectedColor);
+        else if (!isSelected) grid.HideMovementRange();
     }
 
     public override void Update(float deltaTime)
@@ -36,7 +43,6 @@ public class Mech : GameObject, IClickable
     public override void Draw()
     {
         Raylib.DrawTexture(icon, (int)_rect.X, (int)_rect.Y, Color.White);
-        // Raylib.DrawTextureEx(icon, _rect.Position, 0, 1, Color.White);
     }
 
 
@@ -44,8 +50,8 @@ public class Mech : GameObject, IClickable
     {
         return new Vector2
         (
-            (rect.X + rect.Width / 2) - texture.Width/2,
-            (rect.Y + rect.Height / 2) - texture.Height/2
+            (rect.X + rect.Width / 2) - texture.Width / 2,
+            (rect.Y + rect.Height / 2) - texture.Height / 2
         );
     }
 }

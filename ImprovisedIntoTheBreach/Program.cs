@@ -32,13 +32,16 @@ while (!Raylib.WindowShouldClose())
     float deltaTime = Raylib.GetFrameTime();
     Vector2 mousePosition = Raylib.GetMousePosition();
 
+
+
+
     if (Raylib.IsMouseButtonPressed(0))
     {
         foreach (IClickable c in clickables)
         {
             if (c.IsHovering(mousePosition))
             {
-                c.Click();
+                c.Click(grid);
             }
         }
     }
@@ -52,5 +55,3 @@ while (!Raylib.WindowShouldClose())
     Raylib.EndDrawing();
 }
 
-
-//turn slots green when mech clicked next

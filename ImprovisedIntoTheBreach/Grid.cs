@@ -13,6 +13,7 @@ public class Grid : IDrawable
     private int slotPadding = 6;
 
     Color backgroundColor = Color.DarkGray;
+    Color standardContentColor = Color.Gray;
 
 
     public Grid(Vector2 position, int cols, int rows, int slotSize)
@@ -60,4 +61,33 @@ public class Grid : IDrawable
             }
         }
     }
+
+    public void ShowMovementRange(int moveRange, Slot slot, Color color)
+    {
+        var index = MathXtreme.CoordinatesOf<Slot>(Slots, slot);
+
+        for (int i = 1; i <= moveRange; i++)
+        {
+            if (index.Item1 + i < _cols && index.Item1 - i > 0 && index.Item2 + i < _rows && index.Item2 - i > 0)
+            {
+                //Horizontal
+                Slots[index.Item1 + i, index.Item2].contentColor = color;
+                Slots[index.Item1 - i, index.Item2].contentColor = color;
+
+                //Vertical
+                Slots[index.Item1, index.Item2 + i].contentColor = color;
+                Slots[index.Item1, index.Item2 - i].contentColor = color;
+            }
+        }
+    }
+
+    public void HideMovementRange()
+    {
+        foreach (Slot s in Slots)
+        {
+            s.contentColor = standardContentColor;
+        }
+    }
+
+    
 }

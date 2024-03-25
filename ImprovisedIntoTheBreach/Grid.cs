@@ -15,6 +15,8 @@ public class Grid : IDrawable
     Color backgroundColor = Color.DarkGray;
     Color standardContentColor = Color.Gray;
 
+    public List<Slot> SlotsInMoveRange = new();
+
 
     public Grid(Vector2 position, int cols, int rows, int slotSize)
     {
@@ -62,22 +64,21 @@ public class Grid : IDrawable
         }
     }
 
-    public void ShowMovementRange(int moveRange, Slot slot, Color color)
+    public void ShowMovementRange(Slot origin, int moveRange, Color color)
     {
-        var index = MathXtreme.CoordinatesOf<Slot>(Slots, slot);
+        var index = MathXtreme.CoordinatesOf<Slot>(Slots, origin);
 
         for (int i = 1; i <= moveRange; i++)
         {
-            if (index.Item1 + i < _cols && index.Item1 - i > 0 && index.Item2 + i < _rows && index.Item2 - i > 0)
-            {
-                //Horizontal
-                Slots[index.Item1 + i, index.Item2].contentColor = color;
-                Slots[index.Item1 - i, index.Item2].contentColor = color;
+            if (index.Item1 + i < _cols) SlotsInMoveRange.Add(Slots[index.Item1 + i, index.Item2]); //Right
+            if (index.Item1 - i > 0) SlotsInMoveRange.Add(Slots[index.Item1 - i, index.Item2]); //Left
+            if (index.Item2 + i < _rows) SlotsInMoveRange.Add(Slots[index.Item1, index.Item2 + i]); //Down
+            if (index.Item2 - i > 0) SlotsInMoveRange.Add(Slots[index.Item1, index.Item2 - i]); //Up
+        }
 
-                //Vertical
-                Slots[index.Item1, index.Item2 + i].contentColor = color;
-                Slots[index.Item1, index.Item2 - i].contentColor = color;
-            }
+        foreach (Slot s in SlotsInMoveRange)
+        {
+            s.ChangeContentColor(color);
         }
     }
 
@@ -85,9 +86,11 @@ public class Grid : IDrawable
     {
         foreach (Slot s in Slots)
         {
-            s.contentColor = standardContentColor;
+            s.ChangeContentColor(standardContentColor);
         }
+
+        SlotsInMoveRange.Clear();
     }
 
-    
+
 }

@@ -1,14 +1,14 @@
 ﻿namespace ImprovisedIntoTheBreach;
 
-public class Slot: IDrawable
+public class Slot: IDrawable, IClickable
 {
     Rectangle edgeRect;
     public Rectangle contentRect;
 
-    private int padding = 5;
+    int padding = 5;
 
     Color edgeColor = Color.Black;
-    public Color contentColor = Color.Gray;
+    Color contentColor = Color.Gray;
 
     public Slot(Vector2 position, int slotSize)
     {
@@ -23,4 +23,18 @@ public class Slot: IDrawable
         Raylib.DrawRectangleRec(contentRect, contentColor);
     }
 
+    public bool IsHovering(Vector2 mousePos)
+    {
+        return Raylib.CheckCollisionPointRec(mousePos, contentRect);
+    }
+
+    public void Click(Grid grid)
+    {
+        
+    }
+
+    public void ChangeContentColor(Color color)
+    {
+        contentColor = color;
+    }
 }

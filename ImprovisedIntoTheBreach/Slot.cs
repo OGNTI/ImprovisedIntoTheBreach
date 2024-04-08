@@ -28,7 +28,7 @@ public class Slot: IDrawable, IClickable
         return Raylib.CheckCollisionPointRec(mousePos, contentRect);
     }
 
-    public void Click(Grid grid)
+    public void Click()
     {
         
     }

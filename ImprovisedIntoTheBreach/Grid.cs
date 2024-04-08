@@ -1,6 +1,6 @@
 ﻿namespace ImprovisedIntoTheBreach;
 
-public class Grid : IDrawable
+public class Grid : GameObject
 {
     private Vector2 _position;
     private int _cols;
@@ -17,6 +17,7 @@ public class Grid : IDrawable
 
     public List<Slot> SlotsInMoveRange = new();
 
+    Mech selected;
 
     public Grid(Vector2 position, int cols, int rows, int slotSize)
     {
@@ -52,7 +53,28 @@ public class Grid : IDrawable
         }
     }
 
-    public void Draw()
+    public override void Update(float deltaTime)
+    {
+
+
+        if (selected != null)
+        {
+            if (Raylib.IsMouseButtonPressed(0))
+            {
+                foreach (Slot s in SlotsInMoveRange)
+                {
+                    if (s.IsHovering(Raylib.GetMousePosition()))
+                    {
+                        selected.Move(s);
+                    }
+                }
+            }
+        }
+
+        HideMovementRange();
+    }
+
+    public override void Draw()
     {
         Raylib.DrawRectangleRec(gridRect, backgroundColor);
         for (int i = 0; i < _cols; i++)
@@ -64,17 +86,55 @@ public class Grid : IDrawable
         }
     }
 
-    public void ShowMovementRange(Slot origin, int moveRange, Color color)
+    public void ShowMovementRange(Mech unit, Slot origin, int moveRange, Color color)
     {
+        selected = unit;
+
         var index = MathXtreme.CoordinatesOf<Slot>(Slots, origin);
 
         for (int i = 1; i <= moveRange; i++)
         {
             if (index.Item1 + i < _cols) SlotsInMoveRange.Add(Slots[index.Item1 + i, index.Item2]); //Right
-            if (index.Item1 - i > 0) SlotsInMoveRange.Add(Slots[index.Item1 - i, index.Item2]); //Left
+            if (index.Item1 - i >= 0) SlotsInMoveRange.Add(Slots[index.Item1 - i, index.Item2]); //Left
             if (index.Item2 + i < _rows) SlotsInMoveRange.Add(Slots[index.Item1, index.Item2 + i]); //Down
-            if (index.Item2 - i > 0) SlotsInMoveRange.Add(Slots[index.Item1, index.Item2 - i]); //Up
+            if (index.Item2 - i >= 0) SlotsInMoveRange.Add(Slots[index.Item1, index.Item2 - i]); //Up
         }
+
+        // for (int i = 1; i <= moveRange/2; i++)
+        // {
+        //     if (index.Item1 + i < _cols && index.Item2 + i < _rows) SlotsInMoveRange.Add(Slots[index.Item1 + i, index.Item2 + i]); //southeast
+        //     if (index.Item1 - i >= 0 && index.Item2 + i < _rows) SlotsInMoveRange.Add(Slots[index.Item1 - i, index.Item2 + i]); //southwest
+        //     if (index.Item1 + i < _cols && index.Item2 - i >= 0) SlotsInMoveRange.Add(Slots[index.Item1 + i, index.Item2 - i]); //northeast
+        //     if (index.Item1 - i >= 0 && index.Item2 - i >= 0) SlotsInMoveRange.Add(Slots[index.Item1 - i, index.Item2 - i]); //northwest
+        // }
+
+
+        for (int x = 0; x < moveRange; x++)
+        {
+            for (int y = 0; y < moveRange - x; y++)
+            {
+                if (index.Item1 + x < _cols && index.Item2 + y < _rows) SlotsInMoveRange.Add(Slots[index.Item1 + x, index.Item2 + y]);
+            }
+        }
+
+
+
+
+        // SlotsInMoveRange.Add(Slots[index.Item1 + 1, index.Item2 + 1]);
+        // SlotsInMoveRange.Add(Slots[index.Item1 + 2, index.Item2 + 1]);
+        // SlotsInMoveRange.Add(Slots[index.Item1 + 1, index.Item2 + 2]);
+
+        // SlotsInMoveRange.Add(Slots[index.Item1 - 1, index.Item2 + 1]);
+        // SlotsInMoveRange.Add(Slots[index.Item1 - 2, index.Item2 + 1]);
+        // SlotsInMoveRange.Add(Slots[index.Item1 - 1, index.Item2 + 2]);
+
+        // SlotsInMoveRange.Add(Slots[index.Item1 + 1, index.Item2 - 1]);
+        // SlotsInMoveRange.Add(Slots[index.Item1 + 2, index.Item2 - 1]);
+        // SlotsInMoveRange.Add(Slots[index.Item1 + 1, index.Item2 - 2]);
+
+        // SlotsInMoveRange.Add(Slots[index.Item1 - 1, index.Item2 - 1]);
+        // SlotsInMoveRange.Add(Slots[index.Item1 - 2, index.Item2 - 1]);
+        // SlotsInMoveRange.Add(Slots[index.Item1 - 1, index.Item2 - 2]);
 
         foreach (Slot s in SlotsInMoveRange)
         {
@@ -90,7 +150,6 @@ public class Grid : IDrawable
         }
 
         SlotsInMoveRange.Clear();
+        selected = null;
     }
-
-
 }

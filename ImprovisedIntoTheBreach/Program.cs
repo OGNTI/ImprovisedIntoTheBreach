@@ -13,6 +13,7 @@ int slotSize = 100;
 List<Mech> mechs = new();
 List<IClickable> clickables = new();
 List<IDrawable> drawables = new();
+List<GameObject> gameObjects = new();
 
 
 Grid grid = new(new Vector2(screenWidth / 2, screenHeight / 2), colsNRows, colsNRows, slotSize);
@@ -20,18 +21,20 @@ Grid grid = new(new Vector2(screenWidth / 2, screenHeight / 2), colsNRows, colsN
 Raylib.InitWindow(screenWidth, screenHeight, "hmm");
 Raylib.SetTargetFPS(60);
 
-mechs.Add(new Mech(grid.Slots[4, 4]));
+mechs.Add(new Mech(grid, grid.Slots[4, 4]));
 
 clickables.AddRange(mechs);
 
 drawables.Add(grid);
 drawables.AddRange(mechs);
 
+gameObjects.Add(grid);
+gameObjects.AddRange(mechs);
+
 while (!Raylib.WindowShouldClose())
 {
     float deltaTime = Raylib.GetFrameTime();
     Vector2 mousePosition = Raylib.GetMousePosition();
-
 
 
 
@@ -41,16 +44,17 @@ while (!Raylib.WindowShouldClose())
         {
             if (c.IsHovering(mousePosition))
             {
-                c.Click(grid);
+                c.Click();
             }
         }
     }
 
+    gameObjects.ForEach(g => g.Update(deltaTime)); 
 
     Raylib.BeginDrawing();
     Raylib.ClearBackground(Color.White);
 
-    drawables.ForEach(d => d.Draw());
+    drawables.ForEach(d => d.Draw()); 
 
     Raylib.EndDrawing();
 }

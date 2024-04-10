@@ -65,7 +65,7 @@ public class Grid : GameObject
                 {
                     if (s.IsHovering(Raylib.GetMousePosition()))
                     {
-                        selected.Move(s);
+                        selected.Move(s, Slots);
                     }
                 }
             }
@@ -92,7 +92,7 @@ public class Grid : GameObject
 
         var index = MathXtreme.CoordinatesOf<Slot>(Slots, origin);
 
-        for (int i = 1; i <= moveRange; i++)
+        for (int i = 1; i <= moveRange; i++) //Horizontal + Vertical
         {
             if (index.Item1 + i < _cols) SlotsInMoveRange.Add(Slots[index.Item1 + i, index.Item2]); //Right
             if (index.Item1 - i >= 0) SlotsInMoveRange.Add(Slots[index.Item1 - i, index.Item2]); //Left
@@ -100,41 +100,17 @@ public class Grid : GameObject
             if (index.Item2 - i >= 0) SlotsInMoveRange.Add(Slots[index.Item1, index.Item2 - i]); //Up
         }
 
-        // for (int i = 1; i <= moveRange/2; i++)
-        // {
-        //     if (index.Item1 + i < _cols && index.Item2 + i < _rows) SlotsInMoveRange.Add(Slots[index.Item1 + i, index.Item2 + i]); //southeast
-        //     if (index.Item1 - i >= 0 && index.Item2 + i < _rows) SlotsInMoveRange.Add(Slots[index.Item1 - i, index.Item2 + i]); //southwest
-        //     if (index.Item1 + i < _cols && index.Item2 - i >= 0) SlotsInMoveRange.Add(Slots[index.Item1 + i, index.Item2 - i]); //northeast
-        //     if (index.Item1 - i >= 0 && index.Item2 - i >= 0) SlotsInMoveRange.Add(Slots[index.Item1 - i, index.Item2 - i]); //northwest
-        // }
-
-
-        for (int x = 0; x < moveRange; x++)
+        for (int x = 1; x <= moveRange; x++) //Diagonals
         {
-            for (int y = 0; y < moveRange - x; y++)
+            for (int y = 1; y <= moveRange - x; y++)
             {
-                if (index.Item1 + x < _cols && index.Item2 + y < _rows) SlotsInMoveRange.Add(Slots[index.Item1 + x, index.Item2 + y]);
+                if (index.Item1 + x < _cols && index.Item2 + y < _rows) SlotsInMoveRange.Add(Slots[index.Item1 + x, index.Item2 + y]); //southeast
+                if (index.Item1 - x >= 0 && index.Item2 + y < _rows) SlotsInMoveRange.Add(Slots[index.Item1 - x, index.Item2 + y]); //southwest
+                if (index.Item1 + x < _cols && index.Item2 - y >= 0) SlotsInMoveRange.Add(Slots[index.Item1 + x, index.Item2 - y]); //northeast
+                if (index.Item1 - x >= 0 && index.Item2 - y >= 0) SlotsInMoveRange.Add(Slots[index.Item1 - x, index.Item2 - y]); //northwest
+
             }
         }
-
-
-
-
-        // SlotsInMoveRange.Add(Slots[index.Item1 + 1, index.Item2 + 1]);
-        // SlotsInMoveRange.Add(Slots[index.Item1 + 2, index.Item2 + 1]);
-        // SlotsInMoveRange.Add(Slots[index.Item1 + 1, index.Item2 + 2]);
-
-        // SlotsInMoveRange.Add(Slots[index.Item1 - 1, index.Item2 + 1]);
-        // SlotsInMoveRange.Add(Slots[index.Item1 - 2, index.Item2 + 1]);
-        // SlotsInMoveRange.Add(Slots[index.Item1 - 1, index.Item2 + 2]);
-
-        // SlotsInMoveRange.Add(Slots[index.Item1 + 1, index.Item2 - 1]);
-        // SlotsInMoveRange.Add(Slots[index.Item1 + 2, index.Item2 - 1]);
-        // SlotsInMoveRange.Add(Slots[index.Item1 + 1, index.Item2 - 2]);
-
-        // SlotsInMoveRange.Add(Slots[index.Item1 - 1, index.Item2 - 1]);
-        // SlotsInMoveRange.Add(Slots[index.Item1 - 2, index.Item2 - 1]);
-        // SlotsInMoveRange.Add(Slots[index.Item1 - 1, index.Item2 - 2]);
 
         foreach (Slot s in SlotsInMoveRange)
         {

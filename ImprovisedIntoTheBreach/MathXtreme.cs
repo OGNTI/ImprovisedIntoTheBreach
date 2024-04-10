@@ -1,6 +1,4 @@
-﻿// namespace ImprovisedIntoTheBreach;
-
-public static class MathXtreme
+﻿public static class MathXtreme
 {
     public static Vector2 CenterTexture(Rectangle rect, Texture2D texture)
     {

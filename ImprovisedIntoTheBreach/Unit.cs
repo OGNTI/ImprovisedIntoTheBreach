@@ -1,4 +1,6 @@
 ﻿
+using Microsoft.VisualBasic;
+
 namespace ImprovisedIntoTheBreach;
 
 public class Unit : GameObject, IClickable
@@ -15,37 +17,29 @@ public class Unit : GameObject, IClickable
     protected int _actionPoints;
 
     protected bool _isSelected = false;
-    public bool IsSelected
-    {
-        get
-        {
-            return _isSelected;
-        }
-        set
-        {
-            _isSelected = value;
-        }
-    }
+
+    protected Color _selectedColor;
 
 
     public override void Update(float deltaTime)
     {
-
+        if (_grid.selected == this) _grid.ShowMovementRange(_slot, _moveRange, _selectedColor);
     }
 
     public override void Draw()
     {
-
+        Raylib.DrawTexture(_icon, (int)_rect.X, (int)_rect.Y, Color.White);
     }
 
-    public virtual bool IsHovering(Vector2 mousePos)
+    public bool IsHovering(Vector2 mousePos)
     {
-        return false;
+        return Raylib.CheckCollisionPointRec(mousePos, _rect);
     }
 
-    public virtual void Click()
+    public void Click()
     {
-
+        if (_grid.selected != this) _grid.selected = this;
+        else _grid.selected = null;
     }
 
     public void Move(Slot newSlot, Slot[,] array)
@@ -70,18 +64,18 @@ public class Unit : GameObject, IClickable
 
     }
 
-    public void SetPosition()
+    protected void SetPosition()
     {
         _rect.Position = MathXtreme.CenterTexture(_slot.contentRect, _icon);
     }
 
-    void ResetTurnbasedStats()
+    protected void ResetTurnbasedStats()
     {
         _moveRange = _maxMoveRange;
         _actionPoints = _maxActionPoints;
     }
 
-    bool HasActionPoints()
+    protected bool HasActionPoints()
     {
         if (_actionPoints > 0) return true;
         else return false;

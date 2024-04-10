@@ -2,13 +2,13 @@
 
 public class Slot: IDrawable, IClickable
 {
-    Rectangle edgeRect;
+    public Rectangle edgeRect;
     public Rectangle contentRect;
 
     int padding = 5;
 
-    Color edgeColor = Color.Black;
-    Color contentColor = Color.Gray;
+    Color _edgeColor = Color.Black;
+    Color _contentColor = Color.Gray;
 
     public Slot(Vector2 position, int slotSize)
     {
@@ -19,8 +19,8 @@ public class Slot: IDrawable, IClickable
 
     public void Draw()
     {
-        Raylib.DrawRectangleRec(edgeRect, edgeColor);
-        Raylib.DrawRectangleRec(contentRect, contentColor);
+        Raylib.DrawRectangleRec(edgeRect, _edgeColor);
+        Raylib.DrawRectangleRec(contentRect, _contentColor);
     }
 
     public bool IsHovering(Vector2 mousePos)
@@ -35,6 +35,11 @@ public class Slot: IDrawable, IClickable
 
     public void ChangeContentColor(Color color)
     {
-        contentColor = color;
+        _contentColor = color;
+    }
+
+    public void ChangeEdgeColor(Color color)
+    {
+        _edgeColor = color;
     }
 }

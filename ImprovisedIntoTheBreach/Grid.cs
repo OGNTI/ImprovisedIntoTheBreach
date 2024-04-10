@@ -13,11 +13,13 @@ public class Grid : GameObject
     private int slotPadding = 6;
 
     Color backgroundColor = Color.DarkGray;
+    Color standardEdgeColor = Color.Black;
     Color standardContentColor = Color.Gray;
 
     public List<Slot> SlotsInMoveRange = new();
+    List<Slot> SlotsOutsideMoveRange = new();
 
-    Mech selected;
+    public Unit selected = null;
 
     public Grid(Vector2 position, int cols, int rows, int slotSize)
     {
@@ -61,11 +63,27 @@ public class Grid : GameObject
         {
             if (Raylib.IsMouseButtonPressed(0))
             {
+                SlotsOutsideMoveRange.Clear();
+                foreach (Slot s in Slots)
+                {
+                    if (!SlotsInMoveRange.Contains(s)) SlotsOutsideMoveRange.Add(s); //does not work like imagined or at all
+                }
+
                 foreach (Slot s in SlotsInMoveRange)
                 {
                     if (s.IsHovering(Raylib.GetMousePosition()))
                     {
                         selected.Move(s, Slots);
+                    }
+                }
+                foreach (Slot s in SlotsOutsideMoveRange)
+                {
+                    if (s.IsHovering(Raylib.GetMousePosition()))
+                    {
+                        // selected = null;
+
+                        Console.WriteLine(SlotsInMoveRange.Count);
+                        Console.WriteLine(SlotsOutsideMoveRange.Count);
                     }
                 }
             }
@@ -86,10 +104,8 @@ public class Grid : GameObject
         }
     }
 
-    public void ShowMovementRange(Mech unit, Slot origin, int moveRange, Color color)
+    public void ShowMovementRange(Slot origin, int moveRange, Color color)
     {
-        selected = unit;
-
         var index = MathXtreme.CoordinatesOf<Slot>(Slots, origin);
 
         for (int i = 1; i <= moveRange; i++) //Horizontal + Vertical
@@ -116,6 +132,7 @@ public class Grid : GameObject
         {
             s.ChangeContentColor(color);
         }
+        origin.ChangeEdgeColor(color);
     }
 
     public void HideMovementRange()
@@ -123,9 +140,10 @@ public class Grid : GameObject
         foreach (Slot s in Slots)
         {
             s.ChangeContentColor(standardContentColor);
+            s.ChangeEdgeColor(standardEdgeColor);
         }
 
+
         SlotsInMoveRange.Clear();
-        selected = null;
     }
 }

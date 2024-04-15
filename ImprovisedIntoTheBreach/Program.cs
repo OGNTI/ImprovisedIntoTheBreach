@@ -10,9 +10,11 @@ int screenHeight = 950;
 int colsNRows = 8;
 int slotSize = 100;
 
+
 List<Mech> mechs = new();
 List<Bug> bugs = new();
 List<Unit> units = new();
+List<Button> buttons = new();
 List<IClickable> clickables = new();
 List<IDrawable> drawables = new();
 List<GameObject> gameObjects = new();
@@ -24,11 +26,16 @@ Raylib.SetTargetFPS(60);
 
 mechs.Add(new Mech(grid, grid.Slots[4, 4]));
 bugs.Add(new Bug(grid, grid.Slots[3, 2]));
+
+buttons.Add(new Button(new(grid.GetRightSide() + 15, 750, Raylib.MeasureText("End Turn", 36) + 15, 50), "End Turn", () => grid.turn++));
+
 units.AddRange(mechs);
 units.AddRange(bugs);
 clickables.AddRange(units);
+clickables.AddRange(buttons);
 drawables.Add(grid);
 drawables.AddRange(units);
+drawables.AddRange(buttons);
 gameObjects.Add(grid);
 gameObjects.AddRange(units);
 

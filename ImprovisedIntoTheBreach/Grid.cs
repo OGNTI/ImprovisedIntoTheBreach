@@ -2,24 +2,25 @@
 
 public class Grid : GameObject
 {
-    private Vector2 _position;
-    private int _cols;
-    private int _rows;
-    private int _slotSize;
+    Vector2 _position;
+    int _cols;
+    int _rows;
+    int _slotSize;
     public Slot[,] Slots;
-    Rectangle gridRect;
+    Rectangle _gridRect;
 
-    private int backgroundPadding = 7;
-    private int slotPadding = 6;
+    int _backgroundPadding = 7;
+    int _slotPadding = 6;
 
-    Color backgroundColor = Color.DarkGray;
-    Color standardEdgeColor = Color.Black;
-    Color standardContentColor = Color.Gray;
+    Color _backgroundColor = Color.DarkGray;
+    Color _standardEdgeColor = Color.Black;
+    Color _standardContentColor = Color.Gray;
 
     public List<Slot> SlotsInMoveRange = new();
-    List<Slot> SlotsOutsideMoveRange = new();
 
     public Unit selected = null;
+
+    public int turn = 1;
 
     public Grid(Vector2 position, int cols, int rows, int slotSize)
     {
@@ -28,13 +29,13 @@ public class Grid : GameObject
         _slotSize = slotSize;
         _position = position - new Vector2(_cols / 2 * _slotSize, _rows / 2 * _slotSize);
 
-        gridRect = new Rectangle
+        _gridRect = new Rectangle
         (
-            _position - new Vector2(backgroundPadding, backgroundPadding),
+            _position - new Vector2(_backgroundPadding, _backgroundPadding),
             new Vector2
             (
-            (_slotSize * _cols) + (backgroundPadding * 2) + ((_cols - 1) * slotPadding),
-            (_slotSize * _rows) + (backgroundPadding * 2) + ((_rows - 1) * slotPadding)
+            (_slotSize * _cols) + (_backgroundPadding * 2) + ((_cols - 1) * _slotPadding),
+            (_slotSize * _rows) + (_backgroundPadding * 2) + ((_rows - 1) * _slotPadding)
             )
         );
 
@@ -46,8 +47,8 @@ public class Grid : GameObject
             {
                 Slots[i, j] = new Slot(new Vector2
                     (
-                        _position.X + (i * _slotSize) + (i * slotPadding),
-                        _position.Y + (j * _slotSize) + (j * slotPadding)
+                        _position.X + (i * _slotSize) + (i * _slotPadding),
+                        _position.Y + (j * _slotSize) + (j * _slotPadding)
                     ),
                     _slotSize
                 );
@@ -57,33 +58,15 @@ public class Grid : GameObject
 
     public override void Update(float deltaTime)
     {
-
-
         if (selected != null)
         {
             if (Raylib.IsMouseButtonPressed(0))
             {
-                SlotsOutsideMoveRange.Clear();
-                foreach (Slot s in Slots)
-                {
-                    if (!SlotsInMoveRange.Contains(s)) SlotsOutsideMoveRange.Add(s); //does not work like imagined or at all
-                }
-
                 foreach (Slot s in SlotsInMoveRange)
                 {
                     if (s.IsHovering(Raylib.GetMousePosition()))
                     {
                         selected.Move(s, Slots);
-                    }
-                }
-                foreach (Slot s in SlotsOutsideMoveRange)
-                {
-                    if (s.IsHovering(Raylib.GetMousePosition()))
-                    {
-                        // selected = null;
-
-                        Console.WriteLine(SlotsInMoveRange.Count);
-                        Console.WriteLine(SlotsOutsideMoveRange.Count);
                     }
                 }
             }
@@ -94,7 +77,7 @@ public class Grid : GameObject
 
     public override void Draw()
     {
-        Raylib.DrawRectangleRec(gridRect, backgroundColor);
+        Raylib.DrawRectangleRec(_gridRect, _backgroundColor);
         for (int i = 0; i < _cols; i++)
         {
             for (int j = 0; j < _rows; j++)
@@ -102,6 +85,8 @@ public class Grid : GameObject
                 Slots[i, j].Draw();
             }
         }
+
+        Raylib.DrawText("Turn: " + turn.ToString(), (int)_gridRect.X + 20, (int)_gridRect.Y - 50, 40, Color.Black);
     }
 
     public void ShowMovementRange(Slot origin, int moveRange, Color color)
@@ -139,11 +124,22 @@ public class Grid : GameObject
     {
         foreach (Slot s in Slots)
         {
-            s.ChangeContentColor(standardContentColor);
-            s.ChangeEdgeColor(standardEdgeColor);
+            s.ChangeContentColor(_standardContentColor);
+            s.ChangeEdgeColor(_standardEdgeColor);
         }
 
 
         SlotsInMoveRange.Clear();
+    }
+
+    public float GetRightSide()
+    {
+        return _position.X + _gridRect.Width;
+    }
+
+    public void NextTurn()
+    {
+        turn++;
+        
     }
 }

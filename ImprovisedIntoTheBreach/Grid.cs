@@ -17,6 +17,7 @@ public class Grid : GameObject
     Color _standardContentColor = Color.Gray;
 
     public List<Slot> SlotsInMoveRange = new();
+    public List<Slot> SlotsInAttackRange = new();
 
     public Unit selected = null;
 
@@ -89,7 +90,7 @@ public class Grid : GameObject
         Raylib.DrawText("Turn: " + turn.ToString(), (int)_gridRect.X + 20, (int)_gridRect.Y - 50, 40, Color.Black);
     }
 
-    public void ShowMovementRange(Slot origin, int moveRange, Color color)
+    public void ShowMovementRange(Slot origin, int moveRange, Color moveColor, int attackRange)
     {
         var index = MathXtreme.CoordinatesOf<Slot>(Slots, origin);
 
@@ -113,11 +114,24 @@ public class Grid : GameObject
             }
         }
 
+        for (int i = 1; i <= attackRange; i++) //Attack
+        {
+            if (index.Item1 + i < _cols) SlotsInAttackRange.Add(Slots[index.Item1 + i, index.Item2]); //Right
+            if (index.Item1 - i >= 0) SlotsInAttackRange.Add(Slots[index.Item1 - i, index.Item2]); //Left
+            if (index.Item2 + i < _rows) SlotsInAttackRange.Add(Slots[index.Item1, index.Item2 + i]); //Down
+            if (index.Item2 - i >= 0) SlotsInAttackRange.Add(Slots[index.Item1, index.Item2 - i]); //Up
+        }
+
         foreach (Slot s in SlotsInMoveRange)
         {
-            s.ChangeContentColor(color);
+            s.ChangeContentColor(moveColor);
         }
-        origin.ChangeEdgeColor(color);
+        origin.ChangeEdgeColor(moveColor);
+
+        foreach (Slot s in SlotsInAttackRange)
+        {
+            s.ChangeContentColor(Color.Red);
+        }
     }
 
     public void HideMovementRange()
@@ -128,7 +142,6 @@ public class Grid : GameObject
             s.ChangeEdgeColor(_standardEdgeColor);
         }
 
-
         SlotsInMoveRange.Clear();
     }
 
@@ -137,9 +150,12 @@ public class Grid : GameObject
         return _position.X + _gridRect.Width;
     }
 
-    public void NextTurn()
+    public void NextTurn(List<Unit> units)
     {
         turn++;
-        
+        foreach (Unit u in units)
+        {
+            u.ResetTurnbasedStats();
+        }
     }
 }

@@ -1,11 +1,13 @@
-﻿public static class MathXtreme
+﻿using ImprovisedIntoTheBreach;
+
+public static class MathXtreme
 {
     public static Vector2 CenterTexture(Rectangle rect, Texture2D texture)
     {
         return new Vector2
         (
-            (rect.X + rect.Width / 2) - texture.Width / 2,
-            (rect.Y + rect.Height / 2) - texture.Height / 2
+            (rect.X + rect.Width / 2) - (texture.Width / 2),
+            (rect.Y + rect.Height / 2) - (texture.Height / 2)
         );
     }
 
@@ -23,5 +25,15 @@
         }
 
         return Tuple.Create(-1, -1);
+    }
+
+    public static int GetDistance(Slot[,] array, Slot origin, Slot target)
+    {
+        //subtract moved distance from moveRange
+        var currentIndex = MathXtreme.CoordinatesOf<Slot>(array, origin);
+        var targetIndex = MathXtreme.CoordinatesOf<Slot>(array, target);
+        int distance = Math.Abs(currentIndex.Item1 - targetIndex.Item1) + Math.Abs(currentIndex.Item2 - targetIndex.Item2);
+
+        return distance;
     }
 }

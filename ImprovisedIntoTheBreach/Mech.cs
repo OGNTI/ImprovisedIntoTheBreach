@@ -14,6 +14,10 @@ public class Mech : Unit
 
         _maxMoveRange = 3;
         _maxActionPoints = 2;
+        _maxHealthPoints = 4;
+        _healthPoints = _maxHealthPoints;
+        _damage = 2;
+        _attackRange = 1;
         ResetTurnbasedStats();
     }
 }

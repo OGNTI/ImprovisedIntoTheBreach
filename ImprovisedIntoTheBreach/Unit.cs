@@ -15,6 +15,10 @@ public class Unit : GameObject, IClickable
     protected int _moveRange;
     protected int _maxActionPoints;
     protected int _actionPoints;
+    protected int _maxHealthPoints;
+    protected int _healthPoints;
+    protected int _damage;
+    protected int _attackRange;
 
     protected bool _isSelected = false;
 
@@ -23,7 +27,7 @@ public class Unit : GameObject, IClickable
 
     public override void Update(float deltaTime)
     {
-        if (_grid.selected == this) _grid.ShowMovementRange(_slot, _moveRange, _selectedColor);
+        if (_grid.selected == this) _grid.ShowMovementRange(_slot, _moveRange, _selectedColor, _attackRange);
     }
 
     public override void Draw()
@@ -46,10 +50,7 @@ public class Unit : GameObject, IClickable
     {
         if (HasActionPoints())
         {
-            //subtract moved distance from moveRange
-            var currentIndex = MathXtreme.CoordinatesOf<Slot>(array, _slot);
-            var targetIndex = MathXtreme.CoordinatesOf<Slot>(array, newSlot);
-            int distance = Math.Abs(currentIndex.Item1 - targetIndex.Item1) + Math.Abs(currentIndex.Item2 - targetIndex.Item2);
+            int distance = MathXtreme.GetDistance(array, _slot, newSlot);
             _moveRange -= distance;
 
             //Move
@@ -59,9 +60,12 @@ public class Unit : GameObject, IClickable
         }
     }
 
-    public void Attack()
+    public void Attack(Unit target)
     {
-
+        if (HasActionPoints())
+        {
+            target.TakeDamage(_damage);
+        }
     }
 
     protected void SetPosition()
@@ -69,7 +73,7 @@ public class Unit : GameObject, IClickable
         _rect.Position = MathXtreme.CenterTexture(_slot.contentRect, _icon);
     }
 
-    protected void ResetTurnbasedStats()
+    public void ResetTurnbasedStats()
     {
         _moveRange = _maxMoveRange;
         _actionPoints = _maxActionPoints;
@@ -79,5 +83,11 @@ public class Unit : GameObject, IClickable
     {
         if (_actionPoints > 0) return true;
         else return false;
+    }
+
+    public void TakeDamage(int dmg)
+    {
+        _healthPoints -= dmg;
+        Console.WriteLine(_healthPoints);
     }
 }

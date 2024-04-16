@@ -3,16 +3,23 @@
 public class Button : IClickable, IDrawable
 {
     private Rectangle _rect;
+    private Vector2 _pos;
     private string _text;
     private Action _action;
+    private int _textLength;
 
     public Action OnClick;
+    
 
-    public Button(Rectangle rectangle, string text, Action action)
+    public Button(Vector2 position, string text, int fontSize, Action action)
     {
-        _rect = rectangle;
+        _pos = position;
         _text = text;
         _action = action;
+
+        _textLength = Raylib.MeasureText(text, fontSize);
+
+        _rect = new(_pos.X, _pos.Y, _textLength + 10, fontSize + 5);
     }
 
     public bool IsHovering(Vector2 mousePos)

@@ -27,7 +27,7 @@ Raylib.SetTargetFPS(60);
 mechs.Add(new Mech(grid, grid.Slots[4, 4]));
 bugs.Add(new Bug(grid, grid.Slots[3, 2]));
 
-buttons.Add(new Button(new(grid.GetRightSide() + 15, 750, Raylib.MeasureText("End Turn", 36) + 15, 50), "End Turn", () => grid.turn++));
+buttons.Add(new Button(new(grid.GetRightSide() + 15, 750), "End Turn", 36, () => grid.NextTurn(units)));
 
 units.AddRange(mechs);
 units.AddRange(bugs);

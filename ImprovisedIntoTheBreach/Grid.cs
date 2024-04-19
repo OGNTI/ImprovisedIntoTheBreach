@@ -110,7 +110,6 @@ public class Grid : GameObject
                 if (index.Item1 - x >= 0 && index.Item2 + y < _rows) SlotsInMoveRange.Add(Slots[index.Item1 - x, index.Item2 + y]); //southwest
                 if (index.Item1 + x < _cols && index.Item2 - y >= 0) SlotsInMoveRange.Add(Slots[index.Item1 + x, index.Item2 - y]); //northeast
                 if (index.Item1 - x >= 0 && index.Item2 - y >= 0) SlotsInMoveRange.Add(Slots[index.Item1 - x, index.Item2 - y]); //northwest
-
             }
         }
 
@@ -143,6 +142,7 @@ public class Grid : GameObject
         }
 
         SlotsInMoveRange.Clear();
+        SlotsInAttackRange.Clear();
     }
 
     public float GetRightSide()

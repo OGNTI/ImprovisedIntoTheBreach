@@ -50,7 +50,8 @@ public class Unit : GameObject, IClickable
     {
         if (HasActionPoints())
         {
-            int distance = MathXtreme.GetDistance(array, _slot, newSlot);
+            //subtract moved distance from moveRange
+            int distance = MathXtreme.GetDistanceInGrid(array, _slot, newSlot);
             _moveRange -= distance;
 
             //Move

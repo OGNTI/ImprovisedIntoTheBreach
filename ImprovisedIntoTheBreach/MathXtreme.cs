@@ -27,9 +27,8 @@ public static class MathXtreme
         return Tuple.Create(-1, -1);
     }
 
-    public static int GetDistance(Slot[,] array, Slot origin, Slot target)
+    public static int GetDistanceInGrid(Slot[,] array, Slot origin, Slot target)
     {
-        //subtract moved distance from moveRange
         var currentIndex = MathXtreme.CoordinatesOf<Slot>(array, origin);
         var targetIndex = MathXtreme.CoordinatesOf<Slot>(array, target);
         int distance = Math.Abs(currentIndex.Item1 - targetIndex.Item1) + Math.Abs(currentIndex.Item2 - targetIndex.Item2);
